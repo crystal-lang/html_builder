@@ -96,7 +96,7 @@ struct HTML::Builder
     @str << "</#{name}>"
   end
 
-  {% for tag in %w(a b body button div em h1 h2 h3 head html i li ol p s script span strong table tbody td textarea thead title tr u ul form) %}
+  {% for tag in %w(a b body button div em h1 h2 h3 head html i li ol p s script span strong table tbody td textarea thead title tr u ul form footer header article aside bdi details dialog figcaption figure main mark menuitem meter nav progress rp rt ruby section summary time wbr) %}
     # Renders `{{tag.id.upcase}}` html tag with any options.
     #
     # ```
