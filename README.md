@@ -1,4 +1,4 @@
-# html_builder
+# html_builder [![Build Status](https://travis-ci.org/crystal-lang/html_builder.svg)](https://travis-ci.org/crystal-lang/html_builder)
 
 DSL for creating HTML programatically (extracted from Crystal's standard library).
 
