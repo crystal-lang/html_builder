@@ -88,7 +88,7 @@ struct HTML::Builder
   # end
   # # => <section class="crystal">crystal is awesome</section>
   # ```
-  def tag(name, attrs = nil : Hash(Symbol, String)?)
+  def tag(name, attrs : Hash(Symbol, String)? = nil  )
     @str << "<#{name}"
     append_attributes_string(attrs)
     @str << ">"
@@ -105,7 +105,7 @@ struct HTML::Builder
     # end
     # # => <{{tag.id}} class="crystal">crystal is awesome</{{tag.id}}>
     # ```
-    def {{tag.id}}(attrs = nil : Hash(Symbol, String)?)
+    def {{tag.id}}(attrs : Hash(Symbol, String)? = nil)
       @str << "<{{tag.id}}"
       append_attributes_string(attrs)
       @str << ">"
@@ -123,7 +123,7 @@ struct HTML::Builder
     # end
     # # => <{{tag.id}} class="crystal">
     # ```
-    def {{tag.id}}(attrs = nil : Hash(Symbol, String)?)
+    def {{tag.id}}(attrs : Hash(Symbol, String)? = nil)
       @str << "<{{tag.id}}"
       append_attributes_string(attrs)
       @str << ">"
