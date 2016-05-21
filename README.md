@@ -19,21 +19,13 @@ dependencies:
 ```crystal
 require "html_builder"
 
-html = HTML::Builder.new.a({href: "google.com"}) do
-  text "crystal is awesome"
-end
-
-puts html # => "<a href="google.com">crystal is awesome</a>
-```
-
-Or also you can use `build` method:
-
-```crystal
-HTML::Builder.new.build do
-  a({href: "google.com"}) do
+html = HTML.build do
+  a(href: "http://crystal-lang.org") do
     text "crystal is awesome"
   end
-end # => "<a href="google.com">crystal is awesome</a>
+end
+
+puts html # => %(<a href="http://crystal-lang.org">crystal is awesome</a>)
 ```
 
 ## Contributing

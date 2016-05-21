@@ -1,29 +1,29 @@
 require "html"
 
-# HTML::Builder
-#
-# HTML::Builder is a library for representing HTML in Crystal.
+# Defines a DSL for creating HTML.
 #
 # Usage:
 #
 # ```
-# html = HTML::Builder.new.a({href: "google.com"}) do
-#   text "crystal is awesome"
-# end
+# require "html_builder"
 #
-# puts html # => "<a href="google.com">crystal is awesome</a>
-# ```
-#
-# Or also you can use `build` method:
-#
-# ```
-# HTML::Builder.new.build do
-#   a({href: "google.com"}) do
+# html = HTML.build do
+#   a(href: "http://crystal-lang.org") do
 #     text "crystal is awesome"
 #   end
-# end # => "<a href="google.com">crystal is awesome</a>
+# end
+#
+# puts html # => %(<a href="http://crystal-lang.org">crystal is awesome</a>)
 # ```
 struct HTML::Builder
+  # Creates a new HTML::Builder, yields with with `with ... yield`
+  # and then returns the resulting string.
+  def self.build
+    new.build do |builder|
+      with builder yield builder
+    end
+  end
+
   def initialize
     @str = MemoryIO.new
   end
@@ -88,9 +88,17 @@ struct HTML::Builder
   # end
   # # => <section class="crystal">crystal is awesome</section>
   # ```
-  def tag(name, attrs : Hash(Symbol, String)? = nil  )
+  def tag(name, attrs)
     @str << "<#{name}"
     append_attributes_string(attrs)
+    @str << ">"
+    with self yield self
+    @str << "</#{name}>"
+  end
+
+  def tag(name, **attrs)
+    @str << "<#{name}"
+    append_attributes_string(**attrs)
     @str << ">"
     with self yield self
     @str << "</#{name}>"
@@ -101,13 +109,29 @@ struct HTML::Builder
     #
     # ```
     # HTML::Builder.new.build do
-    #   {{tag.id}}({ class: "crystal" }) { text "crystal is awesome" }
+    #   {{tag.id}}({:class => "crystal" }) { text "crystal is awesome" }
     # end
     # # => <{{tag.id}} class="crystal">crystal is awesome</{{tag.id}}>
     # ```
-    def {{tag.id}}(attrs : Hash(Symbol, String)? = nil)
+    def {{tag.id}}(attrs)
       @str << "<{{tag.id}}"
       append_attributes_string(attrs)
+      @str << ">"
+      with self yield self
+      @str << "</{{tag.id}}>"
+    end
+
+    # Renders `{{tag.id.upcase}}` html tag with any options.
+    #
+    # ```
+    # HTML::Builder.new.build do
+    #   {{tag.id}}(class: "crystal") { text "crystal is awesome" }
+    # end
+    # # => <{{tag.id}} class="crystal">crystal is awesome</{{tag.id}}>
+    # ```
+    def {{tag.id}}(**attrs)
+      @str << "<{{tag.id}}"
+      append_attributes_string(**attrs)
       @str << ">"
       with self yield self
       @str << "</{{tag.id}}>"
@@ -119,26 +143,57 @@ struct HTML::Builder
     #
     # ```
     # HTML::Builder.new.build do
-    #   {{tag.id}}({ class: "crystal" })
+    #   {{tag.id}}({:class => "crystal")
     # end
     # # => <{{tag.id}} class="crystal">
     # ```
-    def {{tag.id}}(attrs : Hash(Symbol, String)? = nil)
+    def {{tag.id}}(attrs)
       @str << "<{{tag.id}}"
       append_attributes_string(attrs)
       @str << ">"
     end
+
+    # Renders `{{tag.id.upcase}}` html tag with any options.
+    #
+    # ```
+    # HTML::Builder.new.build do
+    #   {{tag.id}}(class: "crystal")
+    # end
+    # # => <{{tag.id}} class="crystal">
+    # ```
+    def {{tag.id}}(**attrs)
+      @str << "<{{tag.id}}"
+      append_attributes_string(**attrs)
+      @str << ">"
+    end
   {% end %}
 
-  private def append_attributes_string(attrs : Hash(Symbol, String)?)
-    if attrs
-      attrs.each do |name, value|
-        @str << " "
-        @str << name
-        @str << %(=")
-        HTML.escape(value, @str)
-        @str << %(")
-      end
+  private def append_attributes_string(attrs)
+    attrs.try &.each do |name, value|
+      @str << " "
+      @str << name
+      @str << %(=")
+      HTML.escape(value, @str)
+      @str << %(")
+    end
+  end
+
+  private def append_attributes_string(**attrs)
+    attrs.each do |name, value|
+      @str << " "
+      @str << name
+      @str << %(=")
+      HTML.escape(value, @str)
+      @str << %(")
+    end
+  end
+end
+
+module HTML
+  # Convenience method which invokes `HTML::Builder#build`.
+  def self.build
+    HTML::Builder.build do |builder|
+      with builder yield builder
     end
   end
 end
