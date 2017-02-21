@@ -25,7 +25,7 @@ struct HTML::Builder
   end
 
   def initialize
-    @str = MemoryIO.new
+    @str = IO::Memory.new
   end
 
   def build
