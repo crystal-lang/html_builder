@@ -17,7 +17,7 @@ describe HTML::Builder do
         end
       end
     end
-    str.should eq %(<!DOCTYPE html><html><head><title>Crystal Programming Language</title></head><body><a href="http://crystal-lang.org">Crystal rocks&#33;</a><form method="POST"><input name="name"></form></body></html>)
+    str.should eq %(<!DOCTYPE html><html><head><title>Crystal Programming Language</title></head><body><a href="http://crystal-lang.org">Crystal rocks!</a><form method="POST"><input name="name"></form></body></html>)
   end
 
   it "builds html with some tag attributes" do
@@ -26,7 +26,7 @@ describe HTML::Builder do
         text "Crystal rocks!"
       end
     end
-    str.should eq %(<a href="http://crystal-lang.org" class="crystal" id="main">Crystal rocks&#33;</a>)
+    str.should eq %(<a href="http://crystal-lang.org" class="crystal" id="main">Crystal rocks!</a>)
   end
 
   it "builds html with some tag attributes, using a hash" do
@@ -35,7 +35,7 @@ describe HTML::Builder do
         text "Crystal rocks!"
       end
     end
-    str.should eq %(<a href="http://crystal-lang.org" class="crystal" id="main">Crystal rocks&#33;</a>)
+    str.should eq %(<a href="http://crystal-lang.org" class="crystal" id="main">Crystal rocks!</a>)
   end
 
   it "builds html with some tag attributes, using a named tuple" do
@@ -44,7 +44,7 @@ describe HTML::Builder do
         text "Crystal rocks!"
       end
     end
-    str.should eq %(<a href="http://crystal-lang.org" class="crystal" id="main">Crystal rocks&#33;</a>)
+    str.should eq %(<a href="http://crystal-lang.org" class="crystal" id="main">Crystal rocks!</a>)
   end
 
   it "builds html with an provided html string" do
@@ -58,7 +58,7 @@ describe HTML::Builder do
     str = HTML::Builder.new.build do
       tag("section", class: "crystal") { text "Crystal rocks!" }
     end
-    str.should eq %(<section class="crystal">Crystal rocks&#33;</section>)
+    str.should eq %(<section class="crystal">Crystal rocks!</section>)
   end
 
   it "escapes attribute values" do
