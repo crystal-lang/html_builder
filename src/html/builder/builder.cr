@@ -104,7 +104,7 @@ struct HTML::Builder
     @str << "</#{name}>"
   end
 
-  {% for tag in %w(a b body button div em fieldset h1 h2 h3 head html i label li ol option p s script select span strong table tbody td textarea thead th title tr u ul form footer header article aside bdi details dialog figcaption figure main mark menuitem meter nav progress rp rt ruby section summary time wbr) %}
+  {% for tag in %w(a b body button div em fieldset h1 h2 h3 h4 h5 h6 head html i label li ol option p s script select span strong table tbody td textarea thead th title tr u ul form footer header article aside bdi details dialog figcaption figure main mark menuitem meter nav progress rp rt ruby section summary time wbr blockquote pre code object iframe audio video) %}
     # Renders `{{tag.id.upcase}}` html tag with any options.
     #
     # ```
@@ -138,7 +138,7 @@ struct HTML::Builder
     end
   {% end %}
 
-  {% for tag in %w(link input img) %}
+  {% for tag in %w(link input img meta) %}
     # Renders `{{tag.id.upcase}}` html tag with any options.
     #
     # ```
