@@ -1,5 +1,6 @@
 name: html_builder
 version: 0.2.2
+crystal: '< 2.0.0'
 
 authors:
   - Ary Borenszweig <aborenszweig@manas.com.ar>
