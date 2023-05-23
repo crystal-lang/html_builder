@@ -42,24 +42,6 @@ struct HTML::Builder
     @str << "<!DOCTYPE html>"
   end
 
-  # Renders `BR` html tag.
-  #
-  # ```
-  # HTML::Builder.new.build { br } # => <br/>
-  # ```
-  def br
-    @str << "<br/>"
-  end
-
-  # Renders `HR` html tag.
-  #
-  # ```
-  # HTML::Builder.new.build { hr } # => <hr/>
-  # ```
-  def hr
-    @str << "<hr/>"
-  end
-
   # Renders escaped text in html tag.
   #
   # ```
@@ -104,7 +86,7 @@ struct HTML::Builder
     @str << "</#{name}>"
   end
 
-  {% for tag in %w(a b body button div em fieldset h1 h2 h3 h4 h5 h6 head html i label li ol option p s script select span strong style sub sup table tbody td textarea thead th title tr u ul form footer header article aside bdi details dialog figcaption figure main mark menuitem meter nav progress rp rt ruby section summary time wbr blockquote pre code object iframe audio video) %}
+  {% for tag in %w(a abbr address article aside audio b bdi bdo blockquote body button canvas caption cite code colgroup data datalist dd del details dfn dialog div dl dt em fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup html i ins kbd label legend li main map mark menu meter nav noscript object ol optgroup option output p picture pre progress q rp rt ruby s samp script section select slot small span strong style sub summary sup svg table tbody td template textarea tfoot th thead time title tr u ul var video) %}
     # Renders `{{tag.id.upcase}}` html tag with any options.
     #
     # ```
@@ -138,7 +120,7 @@ struct HTML::Builder
     end
   {% end %}
 
-  {% for tag in %w(link input img meta) %}
+  {% for tag in %w(area base br col embed hr img input link meta source track wbr) %}
     # Renders `{{tag.id.upcase}}` html tag with any options.
     #
     # ```
