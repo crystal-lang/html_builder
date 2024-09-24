@@ -25,12 +25,12 @@ struct HTML::Builder
   end
 
   def initialize
-    @str = IO::Memory.new
+    @buffer = String::Builder.new
   end
 
   def build
     with self yield self
-    @str.to_s
+    @buffer.to_s
   end
 
   # Renders `HTML` doctype tag.
@@ -39,7 +39,7 @@ struct HTML::Builder
   # HTML::Builder.new.build { doctype } # => <doctype/>
   # ```
   def doctype
-    @str << "<!DOCTYPE html>"
+    @buffer << "<!DOCTYPE html>"
   end
 
   # Renders escaped text in html tag.
@@ -49,17 +49,17 @@ struct HTML::Builder
   # # => crystal is awesome
   # ```
   def text(text)
-    @str << HTML.escape(text)
+    HTML.escape(text, @buffer)
   end
 
   # Renders the provided html string.
   #
   # ```
   # HTML::Builder.new.build { html "<p>crystal is awesome</p>" }
-  # # => <>crystal is awesome</p>
+  # # => <p>crystal is awesome</p>
   # ```
   def html(html)
-    @str << html
+    @buffer << html
   end
 
   # Renders the provided html tag with any options.
@@ -71,19 +71,25 @@ struct HTML::Builder
   # # => <section class="crystal">crystal is awesome</section>
   # ```
   def tag(name, attrs)
-    @str << "<#{name}"
+    @buffer << "<"
+    @buffer << name
     append_attributes_string(attrs)
-    @str << ">"
+    @buffer << ">"
     with self yield self
-    @str << "</#{name}>"
+    @buffer << "</"
+    @buffer << name
+    @buffer << ">"
   end
 
   def tag(name, **attrs)
-    @str << "<#{name}"
+    @buffer << "<"
+    @buffer << name
     append_attributes_string(**attrs)
-    @str << ">"
+    @buffer << ">"
     with self yield self
-    @str << "</#{name}>"
+    @buffer << "</"
+    @buffer << name
+    @buffer << ">"
   end
 
   {% for tag in %w(a abbr address article aside audio b bdi bdo blockquote body button canvas caption cite code colgroup data datalist dd del details dfn dialog div dl dt em fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup html i ins kbd label legend li main map mark menu meter nav noscript object ol optgroup option output p picture pre progress q rp rt ruby s samp script section select slot small span strong style sub summary sup svg table tbody td template textarea tfoot th thead time title tr u ul var video) %}
@@ -96,11 +102,11 @@ struct HTML::Builder
     # # => <{{tag.id}} class="crystal">crystal is awesome</{{tag.id}}>
     # ```
     def {{tag.id}}(attrs)
-      @str << "<{{tag.id}}"
+      @buffer << "<{{tag.id}}"
       append_attributes_string(attrs)
-      @str << ">"
+      @buffer << ">"
       with self yield self
-      @str << "</{{tag.id}}>"
+      @buffer << "</{{tag.id}}>"
     end
 
     # Renders `{{tag.id.upcase}}` html tag with any options.
@@ -112,11 +118,11 @@ struct HTML::Builder
     # # => <{{tag.id}} class="crystal">crystal is awesome</{{tag.id}}>
     # ```
     def {{tag.id}}(**attrs)
-      @str << "<{{tag.id}}"
+      @buffer << "<{{tag.id}}"
       append_attributes_string(**attrs)
-      @str << ">"
+      @buffer << ">"
       with self yield self
-      @str << "</{{tag.id}}>"
+      @buffer << "</{{tag.id}}>"
     end
   {% end %}
 
@@ -130,9 +136,9 @@ struct HTML::Builder
     # # => <{{tag.id}} class="crystal">
     # ```
     def {{tag.id}}(attrs)
-      @str << "<{{tag.id}}"
+      @buffer << "<{{tag.id}}"
       append_attributes_string(attrs)
-      @str << ">"
+      @buffer << ">"
     end
 
     # Renders `{{tag.id.upcase}}` html tag with any options.
@@ -144,29 +150,29 @@ struct HTML::Builder
     # # => <{{tag.id}} class="crystal">
     # ```
     def {{tag.id}}(**attrs)
-      @str << "<{{tag.id}}"
+      @buffer << "<{{tag.id}}"
       append_attributes_string(**attrs)
-      @str << ">"
+      @buffer << ">"
     end
   {% end %}
 
   private def append_attributes_string(attrs)
     attrs.try &.each do |name, value|
-      @str << " "
-      @str << name
-      @str << %(=")
-      HTML.escape(value, @str)
-      @str << %(")
+      @buffer << " "
+      @buffer << name
+      @buffer << %(=")
+      HTML.escape(value, @buffer)
+      @buffer << %(")
     end
   end
 
   private def append_attributes_string(**attrs)
     attrs.each do |name, value|
-      @str << " "
-      @str << name
-      @str << %(=")
-      HTML.escape(value, @str)
-      @str << %(")
+      @buffer << " "
+      @buffer << name
+      @buffer << %(=")
+      HTML.escape(value, @buffer)
+      @buffer << %(")
     end
   end
 end
