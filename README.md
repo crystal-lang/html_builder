@@ -10,12 +10,13 @@ Add this to your application's `shard.yml`:
 dependencies:
   html_builder:
     github: crystal-lang/html_builder
+    branch: master
 ```
-
 
 ## Usage
 
 #### Basic usage
+
 ```crystal
 require "html_builder"
 
@@ -29,14 +30,13 @@ puts html
 ```
 
 **Output** (this output is formatted for better display):
+
 ```html
-<a href="http://crystal-lang.org">
-  crystal is awesome
-</a>
+<a href="http://crystal-lang.org"> crystal is awesome </a>
 ```
 
-
 #### Full HTML5 page
+
 ```crystal
 html = HTML.build do
   doctype
@@ -59,6 +59,7 @@ puts html
 ```
 
 **Output** :
+
 ```html
 <!DOCTYPE html>
 
@@ -66,13 +67,13 @@ puts html
   <head>
     <title>Crystal Programming Language</title>
 
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
   </head>
 
   <body>
     <a href="http://crystal-lang.org">Crystal rocks!</a>
     <form method="POST">
-      <input name="name">
+      <input name="name" />
     </form>
   </body>
 </html>
@@ -89,15 +90,15 @@ puts html
 ```
 
 **Output**:
+
 ```html
-<v-button to="home">
-  Home
-</v-button>
+<v-button to="home"> Home </v-button>
 ```
 
 #### Safety
 
 HTML::Builder escapes attribute values:
+
 ```crystal
 html = HTML.build do
   a(href: "<>") { }
@@ -107,11 +108,13 @@ puts html
 ```
 
 **Output**:
+
 ```html
 <a href="&lt;&gt;"></a>
 ```
 
 And escapes text:
+
 ```crystal
 html = HTML.build do
   a { text "<>" }
@@ -121,9 +124,11 @@ puts html
 ```
 
 **Output**:
+
 ```html
 <a>&lt;&gt;</a>
 ```
+
 ## Contributing
 
 1. Fork it ( https://github.com/crystal-lang/html_builder/fork )
