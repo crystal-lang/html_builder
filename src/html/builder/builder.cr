@@ -18,14 +18,15 @@ require "html"
 struct HTML::Builder
   # Creates a new HTML::Builder, yields with with `with ... yield`
   # and then returns the resulting string.
-  def self.build
-    new.build do |builder|
+  def self.build(buffer = String::Builder.new)
+    new(buffer).build do |builder|
       with builder yield builder
     end
   end
 
-  def initialize
-    @buffer = String::Builder.new
+  @buffer : IO
+
+  def initialize(@buffer = String::Builder.new)
   end
 
   def build
@@ -179,8 +180,8 @@ end
 
 module HTML
   # Convenience method which invokes `HTML::Builder#build`.
-  def self.build
-    HTML::Builder.build do |builder|
+  def self.build(io = String::Builder.new)
+    HTML::Builder.build(io) do |builder|
       with builder yield builder
     end
   end

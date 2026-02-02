@@ -20,6 +20,16 @@ describe HTML::Builder do
     str.should eq %(<!DOCTYPE html><html><head><title>Crystal Programming Language</title></head><body><a href="http://crystal-lang.org">Crystal rocks!</a><form method="POST"><input name="name"></form></body></html>)
   end
 
+  it "builds html to IO" do
+    io = IO::Memory.new
+    str = HTML::Builder.build(io) do
+      doctype
+      html do
+      end
+    end
+    io.to_s.should eq %(<!DOCTYPE html><html></html>)
+  end
+
   it "builds html with some tag attributes" do
     str = HTML::Builder.new.build do
       a(href: "http://crystal-lang.org", class: "crystal", id: "main") do
