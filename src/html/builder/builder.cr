@@ -20,7 +20,7 @@ struct HTML::Builder
   # and then returns the resulting string.
   def self.build : String
     String.build do |io|
-      new(io).build_impl do |builder|
+      build(io) do |builder|
         with builder yield builder
       end
     end
@@ -47,9 +47,7 @@ struct HTML::Builder
 
   @[Deprecated("Use HTML.build directly")]
   def build(&block)
-    build_impl do
-      with self yield self
-    end
+    with self yield self
     @buffer.to_s
   end
 
