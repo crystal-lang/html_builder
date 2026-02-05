@@ -1,6 +1,7 @@
 name: "Create API docs"
 on:
   push:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
